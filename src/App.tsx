@@ -254,6 +254,8 @@ import {
 import { Bar, Pie } from 'react-chartjs-2';
 import './App.css';
 import { addDays, addMonths, addYears, format, startOfWeek } from 'date-fns';
+import SummaryCards from './summaryCards';
+
 
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, ArcElement, Title, Tooltip, Legend);
@@ -667,7 +669,7 @@ const ChartCard: React.FC<{
   </div>
       <div className="config">
         <div>
-          <label className="date-label">Aggregation:</label>
+         
           <select value={aggregation} onChange={(e) => setAggregation(e.target.value as 'day' | 'week' | 'month' | 'year')}>
             <option value="day">Daily</option>
             <option value="week">Weekly</option>
@@ -678,12 +680,13 @@ const ChartCard: React.FC<{
 
         <div className="date-input-group">
           <div>
-            <label className="date-label">Start Date:</label>
+           
             <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
           </div>
-
+  {/* Separator between dates */}
+  <span className="date-separator">to</span> 
           <div>
-            <label className="date-label">End Date:</label>
+           
             <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
           </div>
         </div>
@@ -699,16 +702,25 @@ const ChartCard: React.FC<{
 
 const App: React.FC = () => {
   return (
-    <div className="container">
-      <ChartCard title="User Count by Mission" chartType="mission" />
-      <ChartCard title="User Count by Age Group" chartType="ageGroup" />
-      {/* <ChartCard title="User Count by School" chartType="school" /> */}
-      <AverageCompletionChartCard /> {/* New Average Completion Time Chart */}
-     
-      <CompletionPercentagePieChart /> {/* New Completion Percentage Pie Chart */}
-    </div>
+    <div className="app-container">
+      {/* Summary Section */}
+      <div className="summary-section">
+        <SummaryCards
+          fetchTotalUsersUrl="http://20.197.37.219:3000/v1/admin/analytics/get-users"
+          fetchTotalMissionsUrl="http://20.197.37.219:3000/v1/admin/analytics/get"
+        />
+      </div>
 
+      {/* Charts Section */}
+      <div className="charts-section">
+        <ChartCard title="User Count by Mission" chartType="mission" />
+        <ChartCard title="User Count by Age Group" chartType="ageGroup" />
+        <AverageCompletionChartCard />
+        <CompletionPercentagePieChart />
+      </div>
+    </div>
   );
 };
+
 
 export default App;
