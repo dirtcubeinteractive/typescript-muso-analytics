@@ -419,10 +419,10 @@ const ChartCard: React.FC<{
       <div className="chart-header">
       <h3 className="chart-title">
         {chartType === 'mission'
-          ? 'User Count by Mission'
+          ? 'Player Count by Mission'
           : chartType === 'ageGroup'
-          ? 'User Count by Age Group'
-          : 'User Count by School'}
+          ? 'Player Count by Age Group'
+          : 'Player Count by School'}
       </h3>
   
   </div>

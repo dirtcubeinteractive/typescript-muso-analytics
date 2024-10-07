@@ -67,7 +67,7 @@ const SummaryCards: React.FC<SummaryCardsProps> = ({ fetchTotalUsersUrl, fetchTo
   return (
     <div className="summary-cards-container">
       <div className="summary-card">
-        <h4>Total Users</h4>
+        <h4>Total Players</h4>
         <p>{totalUsers}</p>
       </div>
       <div className="summary-card">
