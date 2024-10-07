@@ -264,6 +264,7 @@ const CompletionPercentagePieChart: React.FC = () => {
   const [selectedMission, setSelectedMission] = useState<string>('');
   const [chartData, setChartData] = useState<any>(null);
 
+
   useEffect(() => {
     const fetchEngagementData = async () => {
       const response = await fetch('http://20.197.37.219:3000/v1/admin/analytics/get', {
@@ -283,7 +284,13 @@ const CompletionPercentagePieChart: React.FC = () => {
 
       const result = await response.json();
       console.log('Fetched Engagement Data:', result?.data?.engagementReport?.teamsPerMissionPercentage);
-      setData(result?.data?.engagementReport?.teamsPerMissionPercentage || []);
+      const fetchedData = result?.data?.engagementReport?.teamsPerMissionPercentage || [];
+      setData(fetchedData);
+
+      // Automatically set the first mission as the default selected mission
+      if (fetchedData.length > 0) {
+        setSelectedMission(fetchedData[0].name); // Set the first mission as the selected mission
+      }
     };
 
     fetchEngagementData();
