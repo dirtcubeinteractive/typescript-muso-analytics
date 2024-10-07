@@ -342,7 +342,7 @@ const ChartCard: React.FC<{
 }> = ({ title, chartType }) => {
   const [aggregation, setAggregation] = useState<'day' | 'week' | 'month' | 'year'>('day');
   const [startDate, setStartDate] = useState('2024-10-01');
-  const [endDate, setEndDate] = useState('2025-10-01');
+  const [endDate, setEndDate] = useState('2024-12-01');
   const [data, setData] = useState<ParticipationData[]>([]);
  
  
