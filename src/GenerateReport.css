@@ -11,82 +11,90 @@
     justify-content: center;
     align-items: center;
     z-index: 1000; /* Ensure it's above other content */
-  }
-  
-  .generate-report-content {
+}
+
+.generate-report-content {
     background-color: #ffffff;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
     width: 400px;
     max-width: 90%;
-  }
-  
-  h3 {
+}
+
+h3 {
     margin-bottom: 20px;
     font-size: 1.5rem;
     color: #2c3e50;
-  }
-  
-  .form-group {
+}
+
+.form-group {
     margin-bottom: 15px;
-  }
-  
-  .form-group label {
+}
+
+.form-group label {
     display: block;
     font-size: 0.9rem;
     margin-bottom: 5px;
     color: #333;
-  }
-  
-  .form-group select,
-  .form-group input {
+}
+
+.form-group select,
+.form-group input {
     width: 100%;
     padding: 10px;
     border: 1px solid #ced4da;
     border-radius: 6px;
     font-size: 0.9rem;
     margin-top: 5px;
-  }
-  
-  .form-actions {
+}
+
+.form-actions {
     display: flex;
     justify-content: space-between;
     margin-top: 20px;
-  }
-  
-  .generate-button {
-    background-color: #007bff;
+}
+
+/* Styling for the Generate Button */
+.generate-button {
+    background-color: #5E59FF; /* Primary main color */
     color: white;
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .generate-button:hover {
-    background-color: #0056b3;
-  }
-  
-  .cancel-button {
-    background-color: #dc3545;
-    color: white;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.generate-button:hover {
+    background-color: #4E4AD4; /* Primary hover color */
+}
+
+.generate-button:active {
+    background-color: #3F3BAA; /* Primary pressed color */
+}
+
+/* Styling for the Cancel Button */
+.cancel-button {
+    background-color: white; /* Inverted style for cancel button */
+    color: #5E59FF; /* Primary main color for text */
+    border: 1px solid #5E59FF; /* Border using the primary main color */
     padding: 10px 20px;
-    border: none;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .cancel-button:hover {
-    background-color: #c82333;
-  }
-  
-  /* GenerateReport.css */
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.cancel-button:hover {
+    background-color: #DFDEFF; /* Primary surface color */
+}
+
+.cancel-button:active {
+    background-color: #F5F5F5; /* Slightly darker shade for pressed state */
+}
+
 .error-message {
     color: red;
     margin-top: 10px;
     font-size: 14px;
-  }
-  
+}

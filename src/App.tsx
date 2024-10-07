@@ -67,7 +67,7 @@ const CompletionPercentagePieChart: React.FC = () => {
           datasets: [
             {
               data: [selectedData.completedTeams, selectedData.totalTeams - selectedData.completedTeams],
-              backgroundColor: ['rgba(46, 204, 113, 0.8)', 'rgba(231, 76, 60, 0.8)'],
+              backgroundColor: ['rgba(94, 89, 255, 0.8)', 'rgba(255, 107, 107, 0.8)'],
               hoverOffset: 4,
             },
           ],
@@ -171,7 +171,7 @@ const AverageCompletionChartCard: React.FC = () => {
       {
         label: 'Average Completion Time (MM:SS)',
         data: averageTimesInMinutes, // Using minutes for chart data to align with ticks
-        backgroundColor: 'rgba(46, 204, 113, 0.8)',
+        backgroundColor: 'rgba(94, 89, 255, 0.8)',
       },
     ],
   };
@@ -298,15 +298,16 @@ const generateDateLabels = (startDate: string, endDate: string, aggregation: str
 
 
 const colorPalette = [
-  'rgba(52, 152, 219, 0.8)',
-  'rgba(46, 204, 113, 0.8)',
-  'rgba(231, 76, 60, 0.8)',
-  'rgba(155, 89, 182, 0.8)',
-  'rgba(241, 196, 15, 0.8)',
-  'rgba(230, 126, 34, 0.8)',
-  'rgba(26, 188, 156, 0.8)',
-  'rgba(127, 140, 141, 0.8)',
+  'rgba(94, 89, 255, 0.8)',   // Purple from the theme (primary main)
+  'rgba(78, 205, 196, 0.8)',  // Teal (soft and muted for balance)
+  'rgba(255, 107, 107, 0.8)', // Soft red (keeping it muted to match the style)
+  'rgba(255, 206, 84, 0.8)',  // Yellow-orange (a flat tone to match the theme)
+  'rgba(129, 236, 236, 0.8)', // Light cyan (keeping it in the pastel range)
+  'rgba(162, 155, 254, 0.8)', // Lighter lavender (to blend with the theme)
+  'rgba(85, 239, 196, 0.8)',  // Mint green (flat and complementary to purple)
+  'rgba(223, 230, 233, 0.8)', // Light grey (neutral to balance the others)
 ];
+
 
 const fetchDataFromApi = async (aggregation: string, startDate: string, endDate: string): Promise<ParticipationReport> => {
   const response = await fetch('http://20.197.37.219:3000/v1/admin/analytics/get', {

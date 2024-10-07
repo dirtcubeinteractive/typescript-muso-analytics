@@ -151,7 +151,7 @@ body {
 
 /* Styling for the Generate Report Button */
 .generate-report-button {
-  background-color: #007bff; /* Primary blue color */
+  background-color: #5E59FF; /* Primary main color */
   color: white;
   padding: 12px 24px;
   border: none;
@@ -163,11 +163,11 @@ body {
 }
 
 .generate-report-button:hover {
-  background-color: #0056b3; /* Darker blue on hover */
+  background-color: #4E4AD4; /* Primary hover color */
   transform: translateY(-2px); /* Slight lift effect on hover */
 }
 
 .generate-report-button:active {
-  background-color: #004494; /* Even darker blue on click */
+  background-color: #3F3BAA; /* Primary pressed color */
   transform: translateY(0); /* Remove lift effect on click */
 }
