@@ -495,12 +495,28 @@ interface ParticipationReport {
   userCountByAgeGroup?: ParticipationData[];
   userCountBySchool?: ParticipationData[];
 }
+const convertToIST = (utcDateString: string): Date => {
+  const utcDate = new Date(utcDateString);
+  const istOffset = 5.5 * 60 * 60 * 1000; // IST offset in milliseconds (UTC + 5:30)
+  return new Date(utcDate.getTime() + istOffset);
+};
+// Simulate fetching total users from a temporary API
+const fetchTotalUsers = async (): Promise<number> => {
+  // Simulated value for total users
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(150); // Simulated total users value
+    }, 500); // Simulate a slight delay
+  });
+};
+
+
 
 const generateDateLabels = (startDate: string, endDate: string, aggregation: string): string[] => {
   let dateArray: string[] = [];
-  let currentDate = new Date(startDate);
+  let currentDate = convertToIST(startDate);
 
-  while (currentDate < new Date(endDate)) {
+  while (currentDate < convertToIST(endDate)) {
     if (aggregation === 'day') {
       dateArray.push(format(currentDate, 'yyyy-MM-dd'));
       currentDate = addDays(currentDate, 1);
@@ -518,6 +534,8 @@ const generateDateLabels = (startDate: string, endDate: string, aggregation: str
 
   return dateArray;
 };
+
+
 
 const colorPalette = [
   'rgba(52, 152, 219, 0.8)',
@@ -553,6 +571,9 @@ const fetchDataFromApi = async (aggregation: string, startDate: string, endDate:
   return data?.data?.participationReport || {};
 };
 
+
+
+
 // Reusable Chart Component
 const ChartCard: React.FC<{
   title: string;
@@ -562,7 +583,8 @@ const ChartCard: React.FC<{
   const [startDate, setStartDate] = useState('2024-10-01');
   const [endDate, setEndDate] = useState('2025-10-01');
   const [data, setData] = useState<ParticipationData[]>([]);
-
+ 
+ 
   useEffect(() => {
     const loadData = async () => {
       const apiData = await fetchDataFromApi(aggregation, startDate, endDate);
@@ -581,49 +603,47 @@ const ChartCard: React.FC<{
 
   const uniqueCategories = Array.from(new Set(data.map((item) => item.name || item.ageGroup || item.schoolName)));
 
- // Updated logic for generating the chart data
- const chartData = {
-  labels: dateLabels,
-  datasets: uniqueCategories.map((category, index) => ({
-    label: category,
-    data: dateLabels.map((label) => {
-      // Adjust key extraction based on the aggregation type
-      const dataPoint = data.find((item) => {
-        let key: string = ''; // Ensure key is always a string
-
-        // Use the correct field for each aggregation type
-        if (aggregation === 'day' && item.day) {
-          key = format(new Date(item.day), 'yyyy-MM-dd'); // For daily data, format the day field
-        } else if (aggregation === 'week' && item.week) {
-          key = format(new Date(item.week), 'yyyy-MM-dd'); // For weekly data, use the week field
-        } else if (aggregation === 'month' && item.month) {
-          key = format(new Date(item.month), 'yyyy-MM'); // For monthly data, use the month field
-        } else if (aggregation === 'year' && item.year) {
-          key = format(new Date(item.year), 'yyyy'); // For yearly data, use the year field
-        }
-
-        // Debugging: log the key and label being compared to understand what's happening
-        console.log(`Comparing key: ${key} with label: ${label} for category: ${category}`);
-
-        // Compare the key with the label and ensure it matches the intended category
-        return (
-          key &&
-          key === label && // Match the generated key with the current label in dateLabels
-          (item.name === category || item.ageGroup === category || item.schoolName === category)
-        );
-      });
-
-      // Debugging: log if a matching dataPoint is found or not
-      console.log(`Data point for label ${label}, category ${category}:`, dataPoint);
-
-      // Return the user count for the matched dataPoint, or 0 if no match is found
-      return dataPoint ? parseInt(dataPoint.userCount, 10) : 0;
-    }),
-    backgroundColor: colorPalette[index % colorPalette.length],
-  })),
-};
-
-
+  const chartData = {
+    labels: dateLabels,
+    datasets: uniqueCategories.map((category, index) => ({
+      label: category,
+      data: dateLabels.map((label) => {
+        // Adjust key extraction based on the aggregation type
+        const dataPoint = data.find((item) => {
+          let key: string = ''; // Ensure key is always a string
+  
+          // Use the correct field for each aggregation type and convert to IST before formatting
+          if (aggregation === 'day' && item.day) {
+            key = format(convertToIST(item.day), 'yyyy-MM-dd'); // For daily data
+          } else if (aggregation === 'week' && item.week) {
+            key = format(convertToIST(item.week), 'yyyy-MM-dd'); // For weekly data
+          } else if (aggregation === 'month' && item.month) {
+            key = format(convertToIST(item.month), 'yyyy-MM'); // For monthly data
+          } else if (aggregation === 'year' && item.year) {
+            key = format(convertToIST(item.year), 'yyyy'); // For yearly data
+          }
+  
+          // Debugging: log the key and label being compared to understand what's happening
+          console.log(`Comparing key: ${key} with label: ${label} for category: ${category}`);
+  
+          // Compare the key with the label and ensure it matches the intended category
+          return (
+            key &&
+            key === label && // Match the generated key with the current label in dateLabels
+            (item.name === category || item.ageGroup === category || item.schoolName === category)
+          );
+        });
+  
+        // Debugging: log if a matching dataPoint is found or not
+        console.log(`Data point for label ${label}, category ${category}:`, dataPoint);
+  
+        // Return the user count for the matched dataPoint, or 0 if no match is found
+        return dataPoint ? parseInt(dataPoint.userCount, 10) : 0;
+      }),
+      backgroundColor: colorPalette[index % colorPalette.length],
+    })),
+  };
+  
 
 
   const options = {
@@ -633,46 +653,49 @@ const ChartCard: React.FC<{
       y: { stacked: true, grid: { display: false }, ticks: { stepSize: 1, beginAtZero: true } },
     },
   };
-
   return (
     <div className="chart-card">
-  <h3 className="chart-title">
-    {chartType === 'mission'
-      ? 'User Count by Mission'
-      : chartType === 'ageGroup'
-      ? 'User Count by Age Group'
-      : 'User Count by School'}
-  </h3>
-
-  <div className="config">
-  <div>
-  <label className="date-label">Aggregation:</label>
-  <select value={aggregation} onChange={(e) => setAggregation(e.target.value as 'day' | 'week' | 'month' | 'year')}>
-      <option value="day">Daily</option>
-      <option value="week">Weekly</option>
-      <option value="month">Monthly</option>
-      <option value="year">Yearly</option>
-    </select>
-    </div>
-
-    <div className="date-input-group">
-      <div>
-        <label className="date-label">Start Date:</label>
-        <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
-      </div>
-
-      <div>
-        <label className="date-label">End Date:</label>
-        <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
-      </div>
-    </div>
+      <div className="chart-header">
+      <h3 className="chart-title">
+        {chartType === 'mission'
+          ? 'User Count by Mission'
+          : chartType === 'ageGroup'
+          ? 'User Count by Age Group'
+          : 'User Count by School'}
+      </h3>
+  
   </div>
+      <div className="config">
+        <div>
+          <label className="date-label">Aggregation:</label>
+          <select value={aggregation} onChange={(e) => setAggregation(e.target.value as 'day' | 'week' | 'month' | 'year')}>
+            <option value="day">Daily</option>
+            <option value="week">Weekly</option>
+            <option value="month">Monthly</option>
+            <option value="year">Yearly</option>
+          </select>
+        </div>
 
-  <Bar data={chartData} options={options} />
-</div>
+        <div className="date-input-group">
+          <div>
+            <label className="date-label">Start Date:</label>
+            <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
+          </div>
 
+          <div>
+            <label className="date-label">End Date:</label>
+            <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
+          </div>
+        </div>
+      </div>
+
+      <Bar data={chartData} options={options} />
+
+  
+    </div>
   );
 };
+
 
 const App: React.FC = () => {
   return (
