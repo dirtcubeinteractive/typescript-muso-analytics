@@ -493,7 +493,7 @@ const generateDateLabels = (startDate: string, endDate: string, aggregation: str
   let dateArray: string[] = [];
   let currentDate = new Date(startDate);
 
-  while (currentDate <= new Date(endDate)) {
+  while (currentDate < new Date(endDate)) {
     if (aggregation === 'day') {
       dateArray.push(format(currentDate, 'yyyy-MM-dd'));
       currentDate = addDays(currentDate, 1);
@@ -574,30 +574,31 @@ const ChartCard: React.FC<{
 
   const uniqueCategories = Array.from(new Set(data.map((item) => item.name || item.ageGroup || item.schoolName)));
 
-  const chartData = {
-    labels: dateLabels,
-    datasets: uniqueCategories.map((category, index) => ({
-      label: category,
-      data: dateLabels.map((label) => {
-        const dataPoint = data.find((item) => {
-          const key =
-            aggregation === 'day'
-              ? item.day
-              : aggregation === 'week'
-              ? item.week
-              : aggregation === 'month'
-              ? item.month
-              : item.year;
-          return (
-            key &&
-            format(new Date(key), aggregation === 'day' ? 'yyyy-MM-dd' : aggregation === 'week' ? 'yyyy-MM-dd' : aggregation === 'month' ? 'yyyy-MM' : 'yyyy') === label
-          );
-        });
-        return dataPoint ? parseInt(dataPoint.userCount, 10) : 0;
-      }),
-      backgroundColor: colorPalette[index % colorPalette.length],
-    })),
-  };
+ // Updated logic for generating the chart data
+ const chartData = {
+  labels: dateLabels,
+  datasets: uniqueCategories.map((category, index) => ({
+    label: category,
+    data: dateLabels.map((label) => {
+      // Filter only the data points that have a valid day value
+      const dataPoint = data.find((item) => {
+        const key = item.day; // Use the day field for daily aggregation
+
+        // Ensure the key is not null and matches the formatted label
+        return (
+          key &&
+          format(new Date(key), 'yyyy-MM-dd') === label &&
+          (item.name === category || item.ageGroup === category || item.schoolName === category)
+        );
+      });
+
+      // Return the user count for valid data points, otherwise 0
+      return dataPoint ? parseInt(dataPoint.userCount, 10) : 0;
+    }),
+    backgroundColor: colorPalette[index % colorPalette.length],
+  })),
+};
+
 
   const options = {
     responsive: true,
