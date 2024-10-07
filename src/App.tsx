@@ -246,15 +246,113 @@ import {
   CategoryScale,
   LinearScale,
   BarElement,
+  ArcElement,
   Title,
   Tooltip,
   Legend,
 } from 'chart.js';
-import { Bar } from 'react-chartjs-2';
+import { Bar, Pie } from 'react-chartjs-2';
 import './App.css';
 import { addDays, addMonths, addYears, format, startOfWeek } from 'date-fns';
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+
+ChartJS.register(CategoryScale, LinearScale, BarElement, ArcElement, Title, Tooltip, Legend);
+
+// Component for Completion Percentage Pie Chart
+const CompletionPercentagePieChart: React.FC = () => {
+  const [data, setData] = useState<{ id: string; name: string; totalTeams: number; completedTeams: number; completionPercentage: number }[]>([]);
+  const [selectedMission, setSelectedMission] = useState<string>('');
+  const [chartData, setChartData] = useState<any>(null);
+
+  useEffect(() => {
+    const fetchEngagementData = async () => {
+      const response = await fetch('http://20.197.37.219:3000/v1/admin/analytics/get', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          entities: [
+            {
+              value: 'engagement',
+              filters: {},
+            },
+          ],
+        }),
+      });
+
+      const result = await response.json();
+      console.log('Fetched Engagement Data:', result?.data?.engagementReport?.teamsPerMissionPercentage);
+      setData(result?.data?.engagementReport?.teamsPerMissionPercentage || []);
+    };
+
+    fetchEngagementData();
+  }, []);
+
+  useEffect(() => {
+    if (selectedMission) {
+      const selectedData = data.find((item) => item.name === selectedMission);
+
+      if (selectedData && selectedData.totalTeams > 0) {
+        setChartData({
+          labels: ['Completed Teams', 'Incomplete Teams'],
+          datasets: [
+            {
+              data: [selectedData.completedTeams, selectedData.totalTeams - selectedData.completedTeams],
+              backgroundColor: ['rgba(46, 204, 113, 0.8)', 'rgba(231, 76, 60, 0.8)'],
+              hoverOffset: 4,
+            },
+          ],
+        });
+      } else {
+        setChartData(null); // No data to display for this mission
+      }
+    }
+  }, [selectedMission, data]);
+
+  return (
+    <div className="chart-card">
+    <h3 className="chart-title">Completion Percentage per Mission</h3>
+    <div className="config">
+      <div>
+        
+        <select value={selectedMission} onChange={(e) => setSelectedMission(e.target.value)}>
+          <option value="">Select a Mission</option>
+          {data.map((mission) => (
+            <option key={mission.id} value={mission.name}>
+              {mission.name}
+            </option>
+          ))}
+        </select>
+      </div>
+    </div>
+    <div className="chart-wrapper">
+      {chartData ? (
+        <div className="pie-chart-container">
+          <Pie
+            data={chartData}
+            options={{
+              responsive: true,
+              plugins: {
+                tooltip: {
+                  callbacks: {
+                    label: (context) => `${context.label}: ${context.raw} teams`,
+                  },
+                },
+              },
+            }}
+          />
+        </div>
+      ) : (
+        <p style={{ textAlign: 'center', marginTop: '20px', color: '#6c757d' }}>No data to display</p>
+      )}
+    </div>
+  </div>
+  
+  );
+};
+
+
 
 
 // Component for Average Completion Time
@@ -556,7 +654,10 @@ const App: React.FC = () => {
       <ChartCard title="User Count by Age Group" chartType="ageGroup" />
       {/* <ChartCard title="User Count by School" chartType="school" /> */}
       <AverageCompletionChartCard /> {/* New Average Completion Time Chart */}
+     
+      <CompletionPercentagePieChart /> {/* New Completion Percentage Pie Chart */}
     </div>
+
   );
 };
 

@@ -28,6 +28,7 @@ body {
   flex-direction: column;
   justify-content: space-between;
   transition: transform 0.3s, box-shadow 0.3s;
+  min-height: 400px; /* Ensures consistent card height */
 }
 
 .chart-card:hover {
@@ -44,16 +45,30 @@ body {
 }
 
 /* Configuration Section inside each Chart Card */
+/* Configuration Section inside each Chart Card */
 .config {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start; /* Align items to the start */
   align-items: center;
   gap: 10px;
   background-color: #f0f2f5;
   padding: 10px 15px;
   border-radius: 8px;
   margin-bottom: 20px;
+  min-height: 50px; /* Maintain consistent height */
+  position: relative; /* Ensures it stays at the top */
+  z-index: 1; /* Keep it on top of other elements */
 }
+
+/* Wrapper for chart or "No data to display" message */
+.chart-wrapper {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px; /* Ensure consistent height for chart area */
+}
+
 
 .config select,
 .config input {
@@ -88,4 +103,14 @@ body {
 .chart-card canvas {
   width: 100% !important;
   height: auto !important;
+}
+
+/* Specific Styling for Pie Chart Container */
+.pie-chart-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 250px; /* Set a fixed max-width for the pie chart */
+  max-height: 250px; /* Set a fixed max-height for the pie chart */
+  margin: 0 auto; /* Center the pie chart within the container */
 }
