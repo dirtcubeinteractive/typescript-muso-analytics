@@ -15,9 +15,11 @@ import { addDays, addMonths, addYears, format, startOfWeek } from 'date-fns';
 import SummaryCards from './summaryCards';
 import GenerateReport from './GenerateReport';
 
-
-
 ChartJS.register(CategoryScale, LinearScale, BarElement, ArcElement, Title, Tooltip, Legend);
+
+const apiUrl = `${process.env.REACT_APP_API_BASE_URL}/analytics/get`;
+const usersUrl = `${process.env.REACT_APP_API_BASE_URL}/analytics/get-users`;
+
 
 // Component for Completion Percentage Pie Chart
 const CompletionPercentagePieChart: React.FC = () => {
@@ -28,7 +30,7 @@ const CompletionPercentagePieChart: React.FC = () => {
 
   useEffect(() => {
     const fetchEngagementData = async () => {
-      const response = await fetch('http://20.197.37.219:3000/v1/admin/analytics/get', {
+      const response = await fetch(apiUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -129,7 +131,7 @@ const AverageCompletionChartCard: React.FC = () => {
 
   useEffect(() => {
     const fetchAverageCompletionData = async () => {
-      const response = await fetch('http://20.197.37.219:3000/v1/admin/analytics/get', {
+      const response = await fetch(apiUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -310,7 +312,7 @@ const colorPalette = [
 
 
 const fetchDataFromApi = async (aggregation: string, startDate: string, endDate: string): Promise<ParticipationReport> => {
-  const response = await fetch('http://20.197.37.219:3000/v1/admin/analytics/get', {
+  const response = await fetch(apiUrl, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -482,8 +484,8 @@ const App: React.FC = () => {
       {/* Summary Section */}
       <div className="summary-section">
         <SummaryCards
-          fetchTotalUsersUrl="http://20.197.37.219:3000/v1/admin/analytics/get-users"
-          fetchTotalMissionsUrl="http://20.197.37.219:3000/v1/admin/analytics/get"
+          fetchTotalUsersUrl= {usersUrl}
+          fetchTotalMissionsUrl={apiUrl}
         />
       </div>
 

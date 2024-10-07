@@ -3,6 +3,9 @@ import * as XLSX from 'xlsx';
 import { format } from 'date-fns';
 import './GenerateReport.css';
 
+const apiUrl = `${process.env.REACT_APP_API_BASE_URL}/analytics/get`;
+const usersUrl = `${process.env.REACT_APP_API_BASE_URL}/analytics/get-users`;
+
 interface GenerateReportProps {
   onClose: () => void; // Function to close the popup
 }
@@ -13,6 +16,8 @@ const GenerateReport: React.FC<GenerateReportProps> = ({ onClose }) => {
   const [endDate, setEndDate] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  
 
   // Function to convert UTC date to IST
   const convertToIST = (utcDateString: string): string => {
@@ -32,7 +37,7 @@ const formatTime = (milliseconds: number) => {
   // Function to fetch user data for the Users sheet
   const fetchUsersData = async () => {
     try {
-      const response = await fetch('http://20.197.37.219:3000/v1/admin/analytics/get-users', {
+      const response = await fetch(usersUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ startDate, endDate }),
@@ -48,7 +53,7 @@ const formatTime = (milliseconds: number) => {
   // Function to fetch participation data for the User Count sheets
   const fetchParticipationData = async () => {
     try {
-      const response = await fetch('http://20.197.37.219:3000/v1/admin/analytics/get', {
+      const response = await fetch(apiUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -74,7 +79,7 @@ const formatTime = (milliseconds: number) => {
   // Function to fetch question analytics data for the Performance report
   const fetchQuestionAnalyticsData = async () => {
     try {
-      const response = await fetch('http://20.197.37.219:3000/v1/admin/analytics/get', {
+      const response = await fetch(apiUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -92,7 +97,7 @@ const formatTime = (milliseconds: number) => {
   // Function to fetch mission completion time data for the Performance report
   const fetchMissionCompletionTimeData = async () => {
     try {
-      const response = await fetch('http://20.197.37.219:3000/v1/admin/analytics/get', {
+      const response = await fetch(apiUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -110,7 +115,7 @@ const formatTime = (milliseconds: number) => {
   // Function to fetch mission completion percentage data for the Performance report
   const fetchMissionCompletionPercentageData = async () => {
     try {
-      const response = await fetch('http://20.197.37.219:3000/v1/admin/analytics/get', {
+      const response = await fetch(apiUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
