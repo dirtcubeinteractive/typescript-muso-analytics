@@ -44,7 +44,7 @@ const CompletionPercentagePieChart: React.FC = () => {
       });
 
       const result = await response.json();
-      console.log('Fetched Engagement Data:', result?.data?.engagementReport?.teamsPerMissionPercentage);
+   
       const fetchedData = result?.data?.engagementReport?.teamsPerMissionPercentage || [];
       setData(fetchedData);
 
@@ -145,7 +145,7 @@ const AverageCompletionChartCard: React.FC = () => {
       });
 
       const result = await response.json();
-      console.log('Fetched Average Completion Data:', result?.data?.performanceReport?.averageTimePerMission);
+   
       setData(result?.data?.performanceReport?.averageTimePerMission || []);
     };
 
@@ -163,8 +163,7 @@ const AverageCompletionChartCard: React.FC = () => {
   const missionLabels = data.map((item) => item.missionName);
   const averageTimesInMinutes = data.map((item) => parseFloat(item.averageTimeSpent) / 60000); // Convert milliseconds to minutes for data
 
-  console.log('Mission Labels:', missionLabels);
-  console.log('Average Times (in minutes):', averageTimesInMinutes);
+
 
   const chartData = {
     labels: missionLabels,
@@ -385,7 +384,7 @@ const ChartCard: React.FC<{
           }
   
           // Debugging: log the key and label being compared to understand what's happening
-          console.log(`Comparing key: ${key} with label: ${label} for category: ${category}`);
+        
   
           // Compare the key with the label and ensure it matches the intended category
           return (
@@ -396,7 +395,7 @@ const ChartCard: React.FC<{
         });
   
         // Debugging: log if a matching dataPoint is found or not
-        console.log(`Data point for label ${label}, category ${category}:`, dataPoint);
+    
   
         // Return the user count for the matched dataPoint, or 0 if no match is found
         return dataPoint ? parseInt(dataPoint.userCount, 10) : 0;

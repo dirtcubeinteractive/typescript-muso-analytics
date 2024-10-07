@@ -83,3 +83,10 @@
     background-color: #c82333;
   }
   
+  /* GenerateReport.css */
+.error-message {
+    color: red;
+    margin-top: 10px;
+    font-size: 14px;
+  }
+  

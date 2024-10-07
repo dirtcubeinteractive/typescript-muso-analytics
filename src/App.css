@@ -140,6 +140,15 @@ body {
   margin: 0 auto; /* Center the pie chart within the container */
 }
 
+
+/* Ensure the report generation section is aligned properly */
+.report-generation-section {
+  display: flex;
+  justify-content: flex-end; /* Align the button to the right */
+  width: 100%; /* Make sure the section takes the full width of the container */
+  padding: 10px 10px; /* Some padding for spacing */
+}
+
 /* Styling for the Generate Report Button */
 .generate-report-button {
   background-color: #007bff; /* Primary blue color */
@@ -151,8 +160,6 @@ body {
   font-size: 16px;
   font-weight: bold;
   transition: background-color 0.3s ease, transform 0.2s ease;
-  align-self: flex-end; /* Align button to the right */
-  margin: 20px 0; /* Space above and below the button */
 }
 
 .generate-report-button:hover {
@@ -163,11 +170,4 @@ body {
 .generate-report-button:active {
   background-color: #004494; /* Even darker blue on click */
   transform: translateY(0); /* Remove lift effect on click */
-}
-
-/* Ensure the report generation section is aligned properly */
-.report-generation-section {
-  display: flex;
-  justify-content: flex-end; /* Align button to the right */
-  padding: 10px 20px; /* Some padding for spacing */
 }
