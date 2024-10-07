@@ -587,24 +587,43 @@ const ChartCard: React.FC<{
   datasets: uniqueCategories.map((category, index) => ({
     label: category,
     data: dateLabels.map((label) => {
-      // Filter only the data points that have a valid day value
+      // Adjust key extraction based on the aggregation type
       const dataPoint = data.find((item) => {
-        const key = item.day; // Use the day field for daily aggregation
+        let key: string = ''; // Ensure key is always a string
 
-        // Ensure the key is not null and matches the formatted label
+        // Use the correct field for each aggregation type
+        if (aggregation === 'day' && item.day) {
+          key = format(new Date(item.day), 'yyyy-MM-dd'); // For daily data, format the day field
+        } else if (aggregation === 'week' && item.week) {
+          key = format(new Date(item.week), 'yyyy-MM-dd'); // For weekly data, use the week field
+        } else if (aggregation === 'month' && item.month) {
+          key = format(new Date(item.month), 'yyyy-MM'); // For monthly data, use the month field
+        } else if (aggregation === 'year' && item.year) {
+          key = format(new Date(item.year), 'yyyy'); // For yearly data, use the year field
+        }
+
+        // Debugging: log the key and label being compared to understand what's happening
+        console.log(`Comparing key: ${key} with label: ${label} for category: ${category}`);
+
+        // Compare the key with the label and ensure it matches the intended category
         return (
           key &&
-          format(new Date(key), 'yyyy-MM-dd') === label &&
+          key === label && // Match the generated key with the current label in dateLabels
           (item.name === category || item.ageGroup === category || item.schoolName === category)
         );
       });
 
-      // Return the user count for valid data points, otherwise 0
+      // Debugging: log if a matching dataPoint is found or not
+      console.log(`Data point for label ${label}, category ${category}:`, dataPoint);
+
+      // Return the user count for the matched dataPoint, or 0 if no match is found
       return dataPoint ? parseInt(dataPoint.userCount, 10) : 0;
     }),
     backgroundColor: colorPalette[index % colorPalette.length],
   })),
 };
+
+
 
 
   const options = {
