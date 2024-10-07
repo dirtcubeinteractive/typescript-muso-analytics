@@ -154,9 +154,9 @@ const formatTime = (milliseconds: number) => {
           'Email': user.email || 'N/A',
           'Mobile No': user.mobileNo || 'N/A',
           'Age': user.age || 'N/A',
-          'Created At': convertToIST(user.createdAt),
           'Team Name': user.teams?.[0]?.name || 'N/A',
           'Mission Name': user.teams?.[0]?.mission?.name || 'N/A',
+          'Created At': convertToIST(user.createdAt),
         }));
 
         const userCountByMissionData = (participationData.userCountByMission || []).filter(
