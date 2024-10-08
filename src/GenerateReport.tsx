@@ -17,6 +17,23 @@ const GenerateReport: React.FC<GenerateReportProps> = ({ onClose }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const handleEndDateChange = (newEndDate: string) => {
+    if (new Date(newEndDate) <= new Date(startDate)) { // Prevent end date from being earlier than or equal to start date
+      setError('End date must be later than the start date');
+      return; // Prevent the end date update
+    }
+    setEndDate(newEndDate);
+    setError(null); // Clear any existing error message
+  };
+  
+  const handleStartDateChange = (newStartDate: string) => {
+    if (new Date(endDate) <= new Date(newStartDate)) { // Prevent start date from being later than or equal to end date
+      setError('Start date must be earlier than the end date');
+      return; // Prevent the start date update
+    }
+    setStartDate(newStartDate);
+    setError(null); // Clear any existing error message
+  };
   
 
   // Function to convert UTC date to IST
@@ -255,11 +272,11 @@ const formatTime = (milliseconds: number) => {
         </div>
         <div className="form-group">
           <label>Start Date</label>
-          <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
+          <input type="date" value={startDate}   onChange={(e) => handleStartDateChange(e.target.value)} />
         </div>
         <div className="form-group">
           <label>End Date</label>
-          <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
+          <input type="date" value={endDate} onChange={(e) => handleEndDateChange(e.target.value)} />
         </div>
         <div className="form-actions">
           <button className="generate-button" onClick={handleGenerate} disabled={loading}>

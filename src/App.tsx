@@ -366,6 +366,23 @@ const ChartCard: React.FC<{
 
   const uniqueCategories = Array.from(new Set(data.map((item) => item.name || item.ageGroup || item.schoolName)));
 
+  const handleEndDateChange = (newEndDate: string) => {
+    if (new Date(newEndDate) <= new Date(startDate)) { // Check if the end date is earlier than or equal to the start date
+      alert('End date must be later than the start date');
+      return; // Prevent the end date update
+    }
+    setEndDate(newEndDate);
+  };
+  
+  const handleStartDateChange = (newStartDate: string) => {
+    if (new Date(endDate) <= new Date(newStartDate)) { // Check if the start date is later than or equal to the end date
+      alert('Start date must be earlier than the end date');
+      return; // Prevent the start date update
+    }
+    setStartDate(newStartDate);
+  };
+  
+
   const chartData = {
     labels: dateLabels,
     datasets: uniqueCategories.map((category, index) => ({
@@ -442,13 +459,14 @@ const ChartCard: React.FC<{
         <div className="date-input-group">
           <div>
            
-            <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
+            <input type="date" value={startDate}  onChange={(e) => handleStartDateChange(e.target.value)}/>
           </div>
   {/* Separator between dates */}
   <span className="date-separator">to</span> 
           <div>
            
-            <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
+            <input type="date" value={endDate} onChange={(e) => handleEndDateChange(e.target.value)} // Use the validation handler here
+      />
           </div>
         </div>
       </div>
